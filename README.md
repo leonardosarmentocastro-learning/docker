@@ -174,3 +174,9 @@ dfb7e776b3c5        redis               "docker-entrypoint.s…"   8 minutes ago
 docker exec -it dfb7e776b3c5 redis-cli
 $ # Your terminal is waiting for new commands.
 ```
+
+The flag `-it` is actually a combination of two flags, the `-i` and `-t`.
+
+The `-i` flag attaches your bash to the `STDIN` (standard stream input) of the container, which means that everything that you type will be sent to `redis-cli` as an input (as if you were typing).
+
+The `-t` flag attaches your bash to the `STOUT` (standard stream output) of the container, which means that everything responded by the `redis-cli` will be displayed and formatted for you in your bash.
