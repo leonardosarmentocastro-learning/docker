@@ -162,6 +162,13 @@ $ docker run -it busybox sh # could be "zsh", "bash" ...
 # ...
 ```
 
+**Port mapping**
+
+```sh
+# docker run -p <context-port>:<container-port> <docker-image-name
+$ docker run -p 3000:8080 leonardosarmentocastro/simple-web
+```
+
 #### `docker system prune`
 
 Removes all stopped containers, images and build cache (images downloaded from Docker Hub).
@@ -254,7 +261,7 @@ $ docker kill 041ad1d2bff9510ad157583b9657125d97ac2ae73f083f762dae164416031685 #
 
 #### `docker exec`
 
-Executes a given command inside the container and then exit it.
+Executes a given command inside a running container and then exit it.
 
 If you want to _interact_ with the container's bash, you must use the `-it` flag.
 
