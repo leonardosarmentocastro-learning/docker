@@ -1,3 +1,100 @@
+### The `docker build` process in detail
+
+- [The Dockerfile](#the-dockerfile)
+- [Intermediate containers](#intermediate-containers)
+- [Tagging an image](#tagging-an-image)
+
+#### The Dockerfile
+
+To create a Docker image, you need to create a file with a set of instructions. This file is named `Dockerfile`.
+
+Each line of this represents a `step` and Docker will follow them from top to bottom in order to generate your image.
+
+Generally, your set of instructions are organized in the following way:
+
+1. Specify a **base operation system image** to be used;
+
+2. Run commands to install aditional programs;
+
+3. Command to run on container startup;
+
+E.g.
+
+```Dockerfile
+# 1. Use an existing docker image as a base
+FROM alpine
+
+# 2. Download and install a dependency
+RUN apk add --update redis
+
+# 3. Tell the image what to do when its starts as a container
+CMD [ "redis-server" ]
+```
+
+By running the command `docker build <path to where the Dockerfile is>`, you will be able to see the output of the container creation:
+
+```sh
+Step 1/3 : FROM alpine
+ ---> 3f53bb00af94
+Step 2/3 : RUN apk add --update redis
+ ---> Running in 96c6e83ca26e
+ ... # log outputs
+ Removing intermediate container 96c6e83ca26e
+Step 3/3 : CMD [ "redis-server" ]
+ ---> Running in 51449f770173
+ Removing intermediate container 51449f770173
+ Successfully built 961e3e7fa716
+```
+
+If you look closer, you can note that after each `step`, the following sentence is shown:
+
+> ---> Running in 96c6e83ca26e
+
+Which leads us to a very interesting topic of why docker is so fast.
+
+#### Intermediate containers
+
+For each `step` specified in our Dockerfile, a snapshot of the filesystem is taken from this step representing the machine's state so far.
+
+If you run `docker build <path to where the Dockerfile is>`, you will face different messages:
+
+```sh
+Step 1/3 : FROM alpine
+ ---> 3f53bb00af94
+Step 2/3 : RUN apk add --update redis
+ ---> Using cache
+ ---> 96c6e83ca26e
+Step 3/3 : CMD [ "redis-server" ]
+ ---> Using cache
+ ---> 51449f770173
+ Successfully built 51449f770173
+```
+
+Docker already knows the ways from the step 1 to 2 and 2 from 3. It also noticed that nothing have changed since last time.
+
+Which means he can use the containers created from previous steps to build the image more faster at each interation.
+
+If you add a new instruction between step 2 to 3, everything under it needs to be redone because this is a new graph of possibilities.
+
+Try playing with it yourself, adding this new instruction anywhere you want:
+
+`RUN apk add --update gcc`
+
+#### Tagging an image
+
+To avoid the necessity of running images by the random generated UUID, Docker provides a way to give name to your images, just as the one we have used so far, like `hello-world` or `busybox`.
+
+Do it by executing:
+
+```sh
+# Command
+docker build desired-name-for-your-image path-to-the-directory-of-your-dockerfile
+
+# The name convention for tag names are:
+# your-docker-id/image-name:version
+docker build leonardosarmentocastro/my-first-image:latest
+```
+
 ### Commands
 
 - [docker create](#docker-create)
@@ -8,6 +105,7 @@
 - [docker stop](#docker-stop)
 - [docker kill](#docker-kill)
 - [docker exec](#docker-exec)
+- [docker commit](#docker-commit)
 
 #### `docker create`
 
@@ -199,3 +297,39 @@ $ docker exec -it dfb7e776b3c5 sh
 # ...
 ```
 
+#### `docker commit`
+
+As Docker `images` can create `containers`, the other way around is true as well with `docker commit`.
+
+Here, we have the following `Dockerfile`:
+```sh
+# 1. Use an existing docker image as a base
+FROM alpine
+
+# 2. Download and install a dependency
+RUN apk add --update redis
+RUN apk add --update gcc
+
+# 3. Tell the image what to do when its starts as a container
+CMD [ "redis-server" ]
+```
+
+Which can be created by hand, for doing the following:
+
+```sh
+# terminal 1 - creates a container and leave it running
+$ docker run -it alpine sh
+$ apk add --update redis
+
+# terminal 2 - grab the running container's id
+$ docker ps
+CONTAINER ID   IMAGE    COMMAND   CREATED          STATUS          PORTS   NAMES
+9236f1b3f15f   alpine   "sh"      10 seconds ago   Up 10 seconds           jolly_kare
+
+$ docker commit -c 'CMD [ "redis-server" ]' 9236f1b3f15f # -c overrides the "startup command"
+sha256:ea69809ce4889243517658e24fe0854b34f29a68b93f083377cc57f6f26aaeb2 # only the very beginning of the id can be used "ea69809ce"
+
+$ docker run ea69809ce
+1:C 20 Jan 17:09:13.741 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+...
+```
