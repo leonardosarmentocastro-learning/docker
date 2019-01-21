@@ -1,0 +1,9 @@
+version: '3' # Version or "docker-compose" to be used
+services: # Stands for "containers" (think of it like micro-services)
+  redis_server: # Name of our preference for the "container"
+    image: redis # Stands for the Dockerfile command `FROM redis`
+  node_app: # Name of our preference for the "container"
+    restart: "no" # restart policies for the container ['no', always, on-failure, unless-stoped].
+    build: . # Telling to Docker: "hey, use the Dockerfile under . directory" to create this container
+    ports: # Stands for the command `docker run -p 3000:8080`
+      - "3000:8081"

@@ -340,3 +340,50 @@ $ docker run ea69809ce
 1:C 20 Jan 17:09:13.741 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
 ...
 ```
+
+### docker-compose
+
+`docker-compose` is a separate tool that comes with Docker that solves the issue of stablishing network communication accross multiple containers.
+
+Think of a "node app" that needs to reach a "redis server".
+
+Containers described under `docker-compose` have the hability to identify each other using names.
+
+All set of commands that we learned so far regarding Docker can be translated to `docker-compose` commands.
+
+- [up](#up)
+- [down](#down)
+- [ps](#ps)
+
+
+#### `up`
+
+Equivalent to `docker run my-image`, but we don't specify the image name because it expects to have a `docker-compose.yml` on the folder you are executing the command.
+
+**Flags**
+
+> `--build`
+
+Rebuild all the defined containers under `services` so we can have the latest changes.
+
+E.g. `docker-compose up --build`
+
+> `-d`
+
+Spin up the container on background (stands for `daemon`).
+
+E.g. `docker-compose up -d`
+
+
+#### `down`
+
+Stop multiple containers at once.
+
+E.g. `docker-compose stop`
+
+
+#### `ps`
+
+List the status of all docker containers regarding the given context where `docker-compose` was invoked.
+
+E.g. `docker-compose ps` (list the status of all containers specified on `docker-compose.yml` under this directory).
