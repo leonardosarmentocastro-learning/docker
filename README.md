@@ -410,4 +410,4 @@ E.g. `docker-compose ps` (list the status of all containers specified on `docker
 
 ### More resources
 
-Can be found at [section-6/README.md](/section-6/README.md) (mapping volumes, docker-compose, multi-stage build and much more).
+Can be found at [section-6/frontend/README.md](/section-6/frontend/README.md) (mapping volumes, docker-compose, multi-stage build and much more).
