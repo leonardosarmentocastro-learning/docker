@@ -1,0 +1,13 @@
+# QUESTION: Can/should I use variables inside docker-compose?
+
+version: "3"
+services:
+  react-app:
+    build:
+      context: . # Specify the base directory to find all docker related files
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules # Don't overwrite "/node_modules" when symlinking to the project outside the container.
+      - .:/app # Symlink the entire project folder to our working directory.

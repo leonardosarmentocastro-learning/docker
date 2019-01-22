@@ -3,6 +3,7 @@
 - [The Dockerfile](#the-dockerfile)
 - [Intermediate containers](#intermediate-containers)
 - [Tagging an image](#tagging-an-image)
+- [Running Dockerfile for different environments](#running-dockerfile-for-different-environments)
 
 #### The Dockerfile
 
@@ -95,11 +96,24 @@ docker build desired-name-for-your-image path-to-the-directory-of-your-dockerfil
 docker build leonardosarmentocastro/my-first-image:latest
 ```
 
+#### Running Dockerfile for different environments
+
+It is a common scenario to have `Dockerfile` setup for different working environments, specially **development** and **production**.
+
+For that reasons, docker provides a way to specify where to find the given `Dockerfile` of your desire.
+
+To do so, use the `-f` flag:
+
+```sh
+docker build -f Dockerfile.dev .
+```
+
 ### Commands
 
 - [docker create](#docker-create)
 - [docker start](#docker-start)
 - [docker run](#docker-run)
+- [docker build](#docker-build)
 - [docker system prune](#docker-system-prune)
 - [docker logs](#docker-logs)
 - [docker stop](#docker-stop)
@@ -168,6 +182,10 @@ $ docker run -it busybox sh # could be "zsh", "bash" ...
 # docker run -p <context-port>:<container-port> <docker-image-name
 $ docker run -p 3000:8080 leonardosarmentocastro/simple-web
 ```
+
+#### `docker run`
+
+Please refer to [The `docker build` process in detail](#the-docker-build-process-in-detail).
 
 #### `docker system prune`
 
