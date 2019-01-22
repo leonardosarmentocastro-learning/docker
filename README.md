@@ -405,3 +405,9 @@ E.g. `docker-compose stop`
 List the status of all docker containers regarding the given context where `docker-compose` was invoked.
 
 E.g. `docker-compose ps` (list the status of all containers specified on `docker-compose.yml` under this directory).
+
+-----
+
+### More resources
+
+Can be found at [section-6/README.md](/section-6/README.md) (mapping volumes, docker-compose, multi-stage build and much more).
