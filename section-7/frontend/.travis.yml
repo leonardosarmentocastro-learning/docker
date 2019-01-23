@@ -1,0 +1,10 @@
+# need super user level permissions for using Docker
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -f Dockerfile.dev -t leonardosarmentocastro-learning/docker .
+
+script:
+  - docker run leonardosarmentocastro-learning/docker yarn test -- coverage

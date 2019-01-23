@@ -1,0 +1,11 @@
+## Base image - lightweight Node.js environment
+FROM node:alpine
+WORKDIR '/app'
+
+## Preparing the image
+# [cache-intended] Install dependencies
+COPY ./package.json .
+RUN yarn install
+
+## Startup instructions
+CMD ["yarn", "start"]
